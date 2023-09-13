@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+
+{% block head %}
+<style>
+    textarea {
+        resize: none;
+    }
+
+    html,
+    body {
+        height: 100%;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="h-100 d-flex align-items-center">
+    <div class="container">
+        <div class="card text-center">
+            <div class="card-header">
+                Sure Bo?
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Input Suspicious JD Below</h5>
+                <form action="" method="post" class="form-outline mx-3 mt-3">
+                    <div class="input-group mb-3 d-flex justify-content-end">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="modelDropdown">Select Model</label>
+                        </div>
+                        <select class="custom-select" id="modelDropdown">
+                            <option value="model1">Model 1</option>
+                            <option value="model2">Model 2</option>
+                            <option value="model3">Model 3</option>
+                        </select>
+                    </div>
+                    <textarea class="form-control mb-3" rows="6" placeholder="Suspicious jd here"></textarea>
+                    <button class="btn btn-primary">Check Now!</button>
+                </form>
+            </div>
+            <div class="card-footer text-muted d-flex justify-content-between">
+                <span>Guard Your Future, Defend Against Deception: Job Scams Beware!</span>
+                <span>Copyright © 2023 Sure-Bo. All Rights Reserved.</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
