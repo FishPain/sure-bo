@@ -3,3 +3,5 @@ As of December 2022, there’s a total of 6494 victims of online job scams which
 
 # Get started
 ```pip install -r requirements.txt```
+Debug mode: ```python app.py```
+Prod mode: ```flask --app app run```
