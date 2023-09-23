@@ -1,5 +1,9 @@
 
 from flask import Flask, render_template, url_for, redirect, request, session
+import os
+
+PORT = os.getenv('PORT', 5000)
+
 app = Flask(__name__)
 
 # Main page
@@ -15,4 +19,4 @@ def page_not_found(e):
 
 if __name__ == "__main__":
     app.debug = True
-    app.run()
+    app.run(port=PORT)
