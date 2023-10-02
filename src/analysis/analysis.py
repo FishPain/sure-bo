@@ -1,5 +1,3 @@
-<<<<<<< Updated upstream
-=======
 import sys
 import numpy as np
 import pandas as pd
@@ -30,8 +28,7 @@ salary_to_fill_na = ['min_salary', 'max_salary']
 dataset[salary_to_fill_na] = dataset[salary_to_fill_na].replace('', np.nan) #Fill empty fields with NaN
 
 
-
 # Data exploration/validation
 # 1. Check for cols with missing values dataset.columns[np.sum(dataset.isnull()) != 0]
 # 2. we can see that we are able to split col location to Country, State, City etc. 
->>>>>>> Stashed changes
+
