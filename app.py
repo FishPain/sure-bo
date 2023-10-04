@@ -1,8 +1,8 @@
 from flask import Flask, render_template, url_for, redirect, request, session
-from src.ml.inference_worker import InferenceWorker, SMOTETomekTransformer
+from src.ml.inference_worker import InferenceWorker
 import os
 
-PORT = os.getenv('PORT', 5000)
+PORT = os.getenv('PORT', 5001)
 
 from src.app import app_utils
 
@@ -37,4 +37,4 @@ def page_not_found(e):
 
 if __name__ == "__main__":
     app.debug = True
-    app.run(port=PORT)
+    app.run(host="0.0.0.0", port=PORT)
