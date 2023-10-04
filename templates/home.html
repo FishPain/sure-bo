@@ -44,9 +44,16 @@
                             <option value="model3">Model 3</option>
                         </select>
                     </div>
-                    <textarea class="form-control mb-3" rows="6" placeholder="https://www.jobstreet.com.sg/not_a_scam_job"
-                        name="job_street_url"></textarea>
-                    <input type="submit" class="btn btn-primary" value="Check Now!" onclick="modalToggle()" />
+                    <div class="mb-3">
+                        <div class="input-group">
+                            <span class="input-group-text" id="basic-addon3">https://jobstreet.com.sg</span>
+                            <input type="text" class="form-control" id="basic-url"
+                                aria-describedby="basic-addon3 basic-addon4" name="job_street_url">
+                        </div>
+                        <div class="form-text" id="basic-addon4">Check a job posting today!</div>
+                    </div>
+                    <input type="submit" class="btn btn-primary" value="Retrieve Now!" id="primaryBtn"
+                        onclick="toggleLoadBtn()" />
                 </form>
             </div>
             <div class="card-footer text-muted d-flex justify-content-between">
@@ -56,7 +63,7 @@
         </div>
         {% if job_dict %}
         <!-- Modal -->
-        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        <div class="modal fade" id="dataModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
             aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -96,7 +103,35 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Check Now!</button>
+                        <button type="button" class="btn btn-primary" id="checkNowBtn" data-bs-dismiss="modal" onclick="closeAndOpenModal()">Check Now!</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="mlModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Job Retrieved</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        {% if pred_bool != None %}
+                        {% if pred_bool %}
+                            <p>Scam</p>
+                        {% else %}
+                            <p>Not Scam</p>
+                        {% endif %}
+
+                        {% if exp_list %}
+                            <p>{{ exp_list }}</p>
+                        {% endif %}
+                    {% endif %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -105,11 +140,22 @@
     </div>
 </div>
 <script>
-    const myModal = new bootstrap.Modal('#staticBackdrop', {
+    const myModal = new bootstrap.Modal('#dataModal', {
         keyboard: false
     })
-    const modalToggle = document.getElementById('staticBackdrop');
+    const modalToggle = document.getElementById('dataModal');
     myModal.show(modalToggle);
+
+    // Function to close the existing modal and open a new one
+    function closeAndOpenModal(newModalId) {
+        const currentModal = new bootstrap.Modal('#dataModal', { keyboard: false });
+        const dataModal = document.getElementById('dataModal');
+        currentModal.hide(dataModal);
+
+        const newModal = new bootstrap.Modal('#mlModal', { keyboard: false });
+        const mlModal = document.getElementById('mlModal');
+        newModal.show(mlModal);
+    }
 </script>
 
 {% endblock %}
