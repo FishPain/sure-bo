@@ -14,7 +14,7 @@ def get_job_from_jobstreet(url: str)->dict:
     job_dict["salary_range"] = job_details["header"]["salary"]["min"] + "-" + job_details["header"]["salary"]["max"] if job_details["header"]["salary"]["isVisible"] else ''
     job_dict["company_profile"] = job_details["companyDetail"]["companyOverview"]["html"]
     job_dict["description"] = job_details["jobDetail"]["jobDescription"]["html"]
-    job_dict["benefits"] = [i for i in job_details["jobDetail"]["jobRequirement"]["benefits"] if i != "-"]
+    job_dict["benefits"] = " ".join([i for i in job_details["jobDetail"]["jobRequirement"]["benefits"] if i != "-"])
     job_dict["has_company_logo"] = str(all([job_details["header"]["logoUrls"] is not None]))
     job_dict["employment_type"] = job_details["jobDetail"]["jobRequirement"]["employmentType"]
     job_dict["required_experience"] = job_details["jobDetail"]["jobRequirement"]["careerLevel"]

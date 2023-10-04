@@ -26,6 +26,11 @@
                 Please enter a valid JobStreet URL.
             </div>
             {% endif %}
+            {% if url_error %}
+            <div class="alert alert-danger" role="alert" id="invalidUrlAlert">
+                Please enter a valid JobStreet URL.
+            </div>
+            {% endif %}
             <div class="card-body">
                 <h5 class="card-title">Input Suspicious Job Street Posting Below</h5>
                 <form action="" method="post" class="form-outline mx-3 mt-3">
@@ -74,6 +79,18 @@
                                     <td>{{ value|truncate(100, True, '...') }}</td>
                                 </tr>
                                 {% endfor %}
+                                {% if pred_bool != None %}
+                                    {% if pred_bool %}
+                                        <p>Scam</p>
+                                    {% else %}
+                                        <p>Not Scam</p>
+                                    {% endif %}
+
+                                    {% if exp_list %}
+                                        <p>{{ exp_list }}</p>
+                                    {% endif %}
+
+                                {% endif %}
                             </tbody>
                         </table>
                     </div>
