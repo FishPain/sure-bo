@@ -24,7 +24,7 @@ class TrainingWorker():
     def __init__(self) -> None:
         df = pd.read_csv('src/datasets/emscad_v1.csv')
         df = df[['description', 'requirements',
-                 'benefits', 'fraudulent']].fillna('')
+                'benefits', 'fraudulent']].fillna('')
         df["feature"] = df['description'] + " " + \
             df['requirements'] + " " + df['benefits']
         df['feature'] = df['feature'].str.lower()
