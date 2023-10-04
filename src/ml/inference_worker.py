@@ -1,36 +1,15 @@
 import joblib
-import shutil
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from lime import lime_text
 from typing import List, Tuple, Dict
-
 from constants import ModelsConst
 from gensim.parsing.porter import PorterStemmer
-from imblearn.combine import SMOTETomek
-from imblearn.over_sampling import SMOTE
-from sklearn.preprocessing import Normalizer, MultiLabelBinarizer
-from sklearn.decomposition import TruncatedSVD
-from sklearn.base import TransformerMixin
-from sklearn.feature_extraction.text import TfidfVectorizer
-
 import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 nltk.download('punkt')
-
-
-class SMOTETomekTransformer(TransformerMixin):
-    def __init__(self, **kwargs):
-        self.smote_tomek = SMOTETomek(**kwargs)
-
-    def fit(self, X, y):
-        X_resampled, y_resampled = self.smote_tomek.fit_resample(X, y)
-        return self
-
-    def transform(self, X):
-        return X
 
 
 class InferenceWorker():
