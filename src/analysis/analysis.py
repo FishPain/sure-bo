@@ -1,6 +1,7 @@
 import sys
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 print("init")
 
@@ -23,13 +24,21 @@ dataset[salary_to_fill_na] = dataset[salary_to_fill_na].replace('', np.nan) #Fil
 
 dataset = dataset.drop(['location', 'salary_range'], axis=1)
 
-duplicatedChecking(dataset)
+duplicatedChecking(dataset) 
 print(dataset.info()) # Check col datatypes
 print(dataset.describe()) 
 
 print(dataset.columns[3]) # salary range
 
-
+#Pie Chart displaying the number of fraudulent and legitimate jobs
+dataset['fraudulent'] = dataset['fraudulent'].apply(lambda x: 1 if x == "t" else 0)
+fraud_count = (dataset['fraudulent'] == 1).sum()
+nonfraud_count = (dataset['fraudulent'] == 0).sum()
+fraudpie = np.array([fraud_count, nonfraud_count])
+labels = ["Fraudulent", "Non-Fraudulent"]
+plt.pie(fraudpie, labels = labels, autopct=lambda p: '{:.0f}'.format(p * sum(fraudpie) / 100))
+plt.title('No. of Legitimate Job Postings')
+plt.show()
 
 # Data exploration/validation
 # 1. Check for cols with missing values dataset.columns[np.sum(dataset.isnull()) != 0]
