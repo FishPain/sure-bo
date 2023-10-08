@@ -74,10 +74,12 @@ class InferenceWorker:
 
     def explain(self) -> List[Tuple]:
         # Create a LIME explainer
-        explainer = lime_text.LimeTextExplainer(class_names=["Non-Scam", "Scam"])
+        try:
+            explainer = lime_text.LimeTextExplainer(class_names=["fraudulent", "not-fraudulent"])
+            exp = explainer.explain_instance(self.x_text[0], self.model.predict_proba)
+            self.exp = exp.as_list()
 
-        exp = explainer.explain_instance(self.x_text[0], self.model.predict_proba)
+        except Exception as e:
+            print(f"Unable to generate explainability due to: {e}")
 
-        # Print or return the explanation
-        self.exp = exp.as_list()
         return self.exp
