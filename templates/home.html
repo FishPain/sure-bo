@@ -22,13 +22,13 @@
                 Sure Bo?
             </div>
             {% if url_error %}
-            <div class="alert alert-danger" role="alert" id="invalidUrlAlert">
+            <div class="alert alert-danger" role="alert">
                 Please enter a valid JobStreet URL.
             </div>
             {% endif %}
-            {% if url_error %}
-            <div class="alert alert-danger" role="alert" id="invalidUrlAlert">
-                Please enter a valid JobStreet URL.
+            {% if pred_error_msg %}
+            <div class="alert alert-danger" role="alert">
+                {{e}}
             </div>
             {% endif %}
             <div class="card-body">
