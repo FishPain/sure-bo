@@ -1,76 +1,52 @@
 import joblib
+import os
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from lime import lime_text
 from typing import List, Tuple, Dict
 from constants import ModelsConst
-from gensim.parsing.porter import PorterStemmer
-import nltk
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
-nltk.download('punkt')
+from src.ml.preprocess_worker import Preprocessor
 
-
-class InferenceWorker():
-    def __init__(self, data: Dict) -> pd.DataFrame:
-        """ preprocess data and return dataframe with features"""
+class InferenceWorker(Preprocessor):
+    def __init__(self, data: Dict) -> None:
         df = pd.DataFrame(data, index=[0])
-
-        # Columns to check and add if missing
-        columns_to_check = ['description', 'requirements', 'benefits']
-
-        # Check if columns are missing
-        missing_columns = [
-            col for col in columns_to_check if col not in df.columns]
-
-        # Add missing columns and fill with np.nan
+        columns_to_check = ["description", "requirements", "benefits"]
+        missing_columns = [col for col in columns_to_check if col not in df.columns]
         for col in missing_columns:
             df[col] = np.nan
-
-        df = df[['description', 'requirements', 'benefits']].fillna('')
+    
+        df = df[["description", "requirements", "benefits"]].fillna("")
         df["feature"] = df['description'] + " " + \
             df['requirements'] + " " + df['benefits']
         df = df[['feature']]
-        df['feature'] = df['feature'].str.lower()
-        # remove html tags and word that start with & and \
-        df['feature'] = df['feature'].str.replace(r'<[^>]*>', '')
-        df['feature'] = df['feature'].str.replace(r'&[^;]*;', '')
-        df['feature'] = df['feature'].str.replace(r'\\[a-z]*', '')
-        # remove punctuation
-        df['feature'] = df['feature'].str.replace(r'[^\w\s]', '')
-        # remove digits
-        df['feature'] = df['feature'].str.replace(r'\d+', '')
-        # remove whitespace
-        df['feature'] = df['feature'].str.replace(r'\s+', ' ')
-        # tokenize
-        df['feature'] = df['feature'].apply(lambda x: word_tokenize(x.lower()))
-        # remove stopwords
-        all_stopwords = set(stopwords.words('english'))
-        all_stopwords.update(['\\r\\n'])
-        df['feature'] = df['feature'].apply(
-            lambda x: [word for word in x if word not in all_stopwords])
-        # stem words
-        df['feature'] = df['feature'].apply(
-            lambda x: [PorterStemmer().stem(word) for word in x])
-        df['feature'] = df['feature'].apply(
-            lambda x: [word for word in x if len(word) >= 3])
-        df['feature'] = df['feature'].apply(lambda x: ' '.join(x))
-        self.x_text = df['feature']
+
+        super().__init__(df, type="inference")
+        self.x_text = self.df["feature"]
+    
+    def __is_model_exist(self, model=ModelsConst.RANDOM_FOREST.value):
+
+        directory_path = f"src/models/{model}.pkl"
+
+        if os.path.exists(directory_path):
+            print(f"The file {model}.pkl exists in the directory {directory_path}.")
+            return True
+        else:
+            print(f"The file {model}.pkl does not exist in the directory {directory_path}.")
+            return False
+
 
     def predict(self, model: str = ModelsConst.RANDOM_FOREST.value) -> List[int]:
-        self.model = joblib.load(f'src/models/{model}.pkl')
+        if self.__is_model_exist() == False:
+            raise Exception(f"Model not downloaded, please download it manually from https://github.com/FishPain/sure-bo/releases/download/v0.1.0/{model}.pkl. Or run sure-bo in a docker container by running ./docker-start.sh")
+        
+        self.model = joblib.load(f"src/models/{model}.pkl", mmap_mode='r')
         self.pred = self.model.predict(self.x_text)
         return self.pred
 
     def explain(self) -> List[Tuple]:
-        # Create a LIME explainer
-        explainer = lime_text.LimeTextExplainer(
-            class_names=["Non-Scam", "Scam"])
 
-        exp = explainer.explain_instance(
-            self.x_text[0], self.model.predict_proba)
-
-        # Print or return the explanation
+        explainer = lime_text.LimeTextExplainer(class_names=["fraudulent", "not-fraudulent"])
+        exp = explainer.explain_instance(self.x_text[0], self.model.predict_proba)
         self.exp = exp.as_list()
+
         return self.exp

@@ -1,13 +1,12 @@
-from flask import Flask, render_template, url_for, redirect, request, session
+from flask import Flask, render_template, request
 from src.ml.inference_worker import InferenceWorker
 import os
 
-PORT = os.getenv('PORT', 5001)
+PORT = int(os.getenv('PORT', 5001))
 
 from src.app import app_utils
 
 app = Flask(__name__)
-
 
 # Main page
 @app.route("/", methods=["GET", "POST"])
@@ -20,10 +19,14 @@ def root():
         if app_utils.is_valid_jobstreet_url(url):
             job_dict = app_utils.get_job_from_jobstreet(url)
             if job_dict:
-                # Use try-except to handle exceptions during prediction
-                pred = InferenceWorker(job_dict)
-                pred_bool = True if int(pred.predict()[0]) == 1 else False
-                exp_list = pred.explain()
+                try:
+                    # Use try-except to handle exceptions during prediction
+                    pred = InferenceWorker(job_dict)
+                    pred_bool = True if int(pred.predict()[0]) == 1 else False
+                    exp_list = pred.explain()
+                except Exception as e:
+                    print(f"Error during prediction: {e}")
+                    return render_template("home.html", pred_error_msg=e)
         else:
             return render_template("home.html", url_error=True)
     return render_template("home.html", job_dict=job_dict, pred_bool=pred_bool, exp_list=exp_list)
