@@ -28,7 +28,7 @@
             {% endif %}
             {% if pred_error_msg %}
             <div class="alert alert-danger" role="alert">
-                {{e}}
+                {{ pred_error_msg }}
             </div>
             {% endif %}
             <div class="card-body">
@@ -86,18 +86,6 @@
                                     <td>{{ value|truncate(100, True, '...') }}</td>
                                 </tr>
                                 {% endfor %}
-                                {% if pred_bool != None %}
-                                    {% if pred_bool %}
-                                        <p>Scam</p>
-                                    {% else %}
-                                        <p>Not Scam</p>
-                                    {% endif %}
-
-                                    {% if exp_list %}
-                                        <p>{{ exp_list }}</p>
-                                    {% endif %}
-
-                                {% endif %}
                             </tbody>
                         </table>
                     </div>

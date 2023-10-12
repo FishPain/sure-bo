@@ -18,7 +18,9 @@ class TrainingWorker(Preprocessor):
         df = pd.read_csv('src/datasets/emscad_v1.csv')
         df = df[['description', 'requirements',
                 'benefits', 'fraudulent']].fillna('')
-        
+        df["feature"] = df['description'] + " " + \
+            df['requirements'] + " " + df['benefits']
+        df = df[['feature', 'fraudulent']]
         super().__init__(df, type="train")
 
     def train(self, model=ModelsConst.RANDOM_FOREST.value):

@@ -5,13 +5,15 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 nltk.download('punkt')
+nltk.download('stopwords')
 
 
 class Preprocessor():
     def __init__(self, df, type=None) -> None:
-        df["feature"] = df['description'] + " " + \
-            df['requirements'] + " " + df['benefits']
-        df = df[['feature', 'fraudulent']]
+        if type == "train":
+            df['fraudulent'] = df['fraudulent'].apply(
+                lambda x: 1 if x == "t" else 0)
+            
         df['feature'] = df['feature'].str.lower()
         df['feature'] = df['feature'].apply(self.__remove_html_tags_and_escape_chars)
         df['feature'] = df['feature'].apply(self.__remove_non_alpha)
@@ -25,9 +27,6 @@ class Preprocessor():
             lambda x: [word for word in x if len(word) >= 3])
         df['feature'] = df['feature'].apply(lambda x: ' '.join(x))
         df = df[df['feature'] != '']
-        if type == "train":
-            df['fraudulent'] = df['fraudulent'].apply(
-                lambda x: 1 if x == "t" else 0)
         self.df = df
         
     def __remove_html_tags_and_escape_chars(self, input_text):
