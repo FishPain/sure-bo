@@ -14,22 +14,23 @@ def root():
     job_dict = None
     pred_bool = None
     exp_list = None
+    raw_text = None
     if request.method == "POST":
         url = request.form["job_street_url"]
         if app_utils.is_valid_jobstreet_url(url):
             job_dict = app_utils.get_job_from_jobstreet(url)
             if job_dict:
                 try:
-                    # Use try-except to handle exceptions during prediction
                     pred = InferenceWorker(job_dict)
                     pred_bool = True if int(pred.predict()[0]) == 1 else False
                     exp_list = pred.explain()
+                    raw_text = pred.raw_text
                 except Exception as e:
                     print(f"Error during prediction: {e}")
                     return render_template("home.html", pred_error_msg=e)
         else:
             return render_template("home.html", url_error=True)
-    return render_template("home.html", job_dict=job_dict, pred_bool=pred_bool, exp_list=exp_list)
+    return render_template("home.html", job_dict=job_dict, pred_bool=pred_bool, exp_list=exp_list, raw_text=raw_text)
 
 
 # 404 Page

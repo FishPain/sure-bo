@@ -52,8 +52,7 @@
                         </div>
                         <div class="form-text" id="basic-addon4">Check a job posting today!</div>
                     </div>
-                    <input type="submit" class="btn btn-primary" value="Retrieve Now!" id="primaryBtn"
-                        onclick="toggleLoadBtn()" />
+                    <input type="submit" class="btn btn-primary" value="Retrieve Now!" id="primaryBtn" />
                 </form>
             </div>
             <div class="card-footer text-muted d-flex justify-content-between">
@@ -107,17 +106,17 @@
                     </div>
                     <div class="modal-body">
                         {% if pred_bool != None %}
-                        {% if pred_bool %}
-                            <p>Scam</p>
-                        {% else %}
-                            <p>Not Scam</p>
+                            {% if pred_bool %}
+                                <p>Scam</p>
+                            {% else %}
+                                <p>Not Scam</p>
+                            {% endif %}
+                    
+                            {% if exp_list %}
+                                <p id="highlightedText">{{ raw_text }}</p>
+                            {% endif %}
                         {% endif %}
-
-                        {% if exp_list %}
-                            <p>{{ exp_list }}</p>
-                        {% endif %}
-                    {% endif %}
-                    </div>
+                    </div>                    
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
@@ -127,6 +126,22 @@
         {% endif %}
     </div>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var expList = {{ exp_list | tojson }};
+        var highlightedText = document.getElementById("highlightedText");
+        console.log(expList)
+        expList.forEach(function(tuple) {
+            var color = tuple[1] >= 0 ? 'rgba(242, 130, 104, ' : 'rgba(135, 235, 168, ';
+            var percentage = Math.abs(tuple[1] * 100);
+            var regex = new RegExp('\\b' + tuple[0] + '\\B', 'g');
+            highlightedText.innerHTML = highlightedText.innerHTML.replace(
+                regex,
+                '<span style="background-color: ' + color + percentage + ');">$&</span>'
+            );
+        });
+    });
+</script>
 <script>
     const myModal = new bootstrap.Modal('#dataModal', {
         keyboard: false
@@ -145,5 +160,4 @@
         newModal.show(mlModal);
     }
 </script>
-
 {% endblock %}

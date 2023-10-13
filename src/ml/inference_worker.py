@@ -48,5 +48,4 @@ class InferenceWorker(Preprocessor):
         explainer = lime_text.LimeTextExplainer(class_names=["fraudulent", "not-fraudulent"])
         exp = explainer.explain_instance(self.x_text[0], self.model.predict_proba)
         self.exp = exp.as_list()
-
-        return self.exp
+        return self.exp, self.raw_text

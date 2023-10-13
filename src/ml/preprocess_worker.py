@@ -16,6 +16,7 @@ class Preprocessor():
             
         df['feature'] = df['feature'].str.lower()
         df['feature'] = df['feature'].apply(self.__remove_html_tags_and_escape_chars)
+        self.raw_text = ' '.join(df['feature'].astype(str))
         df['feature'] = df['feature'].apply(self.__remove_non_alpha)
         df['feature'] = df['feature'].apply(lambda x: word_tokenize(x.lower()))
         all_stopwords = set(stopwords.words('english'))
