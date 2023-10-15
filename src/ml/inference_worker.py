@@ -43,8 +43,7 @@ class InferenceWorker(Preprocessor):
         self.pred = self.model.predict(self.x_text)
         return self.pred
 
-    def explain(self) -> List[Tuple]:
-
+    def explain(self):
         explainer = lime_text.LimeTextExplainer(class_names=["fraudulent", "not-fraudulent"])
         exp = explainer.explain_instance(self.x_text[0], self.model.predict_proba)
         self.exp = exp.as_list()

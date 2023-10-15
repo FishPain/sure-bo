@@ -11,6 +11,10 @@
     body {
         height: 100%;
     }
+    
+    #highlightedText {
+        overflow: hidden;
+    }
 </style>
 {% endblock %}
 
@@ -54,6 +58,10 @@
                     </div>
                     <input type="submit" class="btn btn-primary" value="Retrieve Now!" id="primaryBtn" />
                 </form>
+                <form action="" method="post" class="form-outline mx-3 mt-3">
+                    <input type="text" class="form-control" name="mock_inference" value="True" hidden>
+                    <input type="submit"class="btn btn-secondary" value="Send Mock Inference"/>
+                </form>
             </div>
             <div class="card-footer text-muted d-flex justify-content-between">
                 <span>Guard Your Future, Defend Against Deception: Job Scams Beware!</span>
@@ -71,23 +79,25 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <table class="table table-striped table-sm">
-                            <thead>
-                                <tr>
-                                    <th>Key</th>
-                                    <th>Value</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for key, value in job_dict.items() %}
-                                <tr>
-                                    <td>{{ key }}</td>
-                                    <td>{{ value|truncate(100, True, '...') }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Key</th>
+                                        <th>Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for key, value in job_dict.items() %}
+                                    <tr>
+                                        <td>{{ key }}</td>
+                                        <td class="text-truncate" style="max-width: 200px;">{{ value }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>                    
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary" id="checkNowBtn" data-bs-dismiss="modal" onclick="closeAndOpenModal()">Check Now!</button>
@@ -107,13 +117,29 @@
                     <div class="modal-body">
                         {% if pred_bool != None %}
                             {% if pred_bool %}
-                                <p>Scam</p>
+                                <p class="fs-2 text-center text-danger-emphasis">Scam</p>
                             {% else %}
-                                <p>Not Scam</p>
+                                <p class="fs-2 text-center text-success-emphasis">Not Scam</p>
                             {% endif %}
                     
                             {% if exp_list %}
+                                <p class="fs-5">Explanation:</p>
                                 <p id="highlightedText">{{ raw_text }}</p>
+                                <script>
+                                    document.addEventListener("DOMContentLoaded", function() {
+                                        var expList = {{ exp_list | tojson }};
+                                        var highlightedText = document.getElementById("highlightedText");
+                                        expList.forEach((tuple) => {
+                                            var color = tuple[1] >= 0 ? 'rgba(242, 130, 104, ' : 'rgba(135, 235, 168, ';
+                                            var percentage = Math.abs(tuple[1]*100);
+                                            var regex = new RegExp('\\b' + tuple[0] + '\\B', 'g');
+                                            highlightedText.innerHTML = highlightedText.innerHTML.replace(
+                                                regex,
+                                                '<span style="background-color: ' + color + percentage + ');">$&</span>'
+                                            );
+                                        });
+                                    });
+                                </script>
                             {% endif %}
                         {% endif %}
                     </div>                    
@@ -126,22 +152,7 @@
         {% endif %}
     </div>
 </div>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var expList = {{ exp_list | tojson }};
-        var highlightedText = document.getElementById("highlightedText");
-        console.log(expList)
-        expList.forEach(function(tuple) {
-            var color = tuple[1] >= 0 ? 'rgba(242, 130, 104, ' : 'rgba(135, 235, 168, ';
-            var percentage = Math.abs(tuple[1] * 100);
-            var regex = new RegExp('\\b' + tuple[0] + '\\B', 'g');
-            highlightedText.innerHTML = highlightedText.innerHTML.replace(
-                regex,
-                '<span style="background-color: ' + color + percentage + ');">$&</span>'
-            );
-        });
-    });
-</script>
+
 <script>
     const myModal = new bootstrap.Modal('#dataModal', {
         keyboard: false

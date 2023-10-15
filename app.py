@@ -11,25 +11,29 @@ app = Flask(__name__)
 # Main page
 @app.route("/", methods=["GET", "POST"])
 def root():
-    job_dict = None
-    pred_bool = None
-    exp_list = None
-    raw_text = None
+    job_dict, pred_bool, exp_list, raw_text = None, None, None, None
+
     if request.method == "POST":
-        url = request.form["job_street_url"]
-        if app_utils.is_valid_jobstreet_url(url):
-            job_dict = app_utils.get_job_from_jobstreet(url)
-            if job_dict:
-                try:
-                    pred = InferenceWorker(job_dict)
-                    pred_bool = True if int(pred.predict()[0]) == 1 else False
-                    exp_list = pred.explain()
-                    raw_text = pred.raw_text
-                except Exception as e:
-                    print(f"Error during prediction: {e}")
-                    return render_template("home.html", pred_error_msg=e)
+        if request.form.get("mock_inference"):
+            job_dict = app_utils.get_mock_job()
         else:
-            return render_template("home.html", url_error=True)
+            url = request.form.get("job_street_url")
+            if not app_utils.is_valid_jobstreet_url(url):
+                return render_template("home.html", url_error=True)
+            try:
+                job_dict = app_utils.get_job_from_jobstreet(url)
+            except Exception as e:
+                print(f"Error during scraping: {e}")
+                return render_template("home.html", scrape_error_msg=e)
+        try:
+            pred = InferenceWorker(job_dict)
+            pred_bool = True if int(pred.predict()[0]) == 1 else False
+            exp_list = pred.explain()[0]
+            raw_text = pred.raw_text
+        except Exception as e:
+            print(f"Error during prediction: {e}")
+            return render_template("home.html", pred_error_msg=e)
+                
     return render_template("home.html", job_dict=job_dict, pred_bool=pred_bool, exp_list=exp_list, raw_text=raw_text)
 
 
