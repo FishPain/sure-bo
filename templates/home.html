@@ -35,6 +35,11 @@
                 {{ pred_error_msg }}
             </div>
             {% endif %}
+            {% if scrape_error_msg %}
+            <div class="alert alert-danger" role="alert">
+                Could not retrieve job detail with error: {{ scrape_error_msg }}
+            </div>
+            {% endif %}
             <div class="card-body">
                 <h5 class="card-title">Input Suspicious Job Street Posting Below</h5>
                 <form action="" method="post" class="form-outline mx-3 mt-3">

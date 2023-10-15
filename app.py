@@ -23,7 +23,6 @@ def root():
             try:
                 job_dict = app_utils.get_job_from_jobstreet(url)
             except Exception as e:
-                print(f"Error during scraping: {e}")
                 return render_template("home.html", scrape_error_msg=e)
         try:
             pred = InferenceWorker(job_dict)
