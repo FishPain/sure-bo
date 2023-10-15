@@ -2,6 +2,7 @@ import requests
 import json
 import bs4
 import re
+from constants import ModelsConst
 
 
 def get_job_from_jobstreet(url: str)->dict:
@@ -46,3 +47,6 @@ def get_mock_job():
     'fraudulent': 't',
     'in_balanced_dataset': 'f'}
     return job_dict
+
+def get_model_list():
+    return [model.name for model in ModelsConst]

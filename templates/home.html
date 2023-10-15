@@ -48,9 +48,9 @@
                             <label class="input-group-text" for="modelDropdown">Select Model</label>
                         </div>
                         <select class="custom-select" id="modelDropdown">
-                            <option value="model1">Model 1</option>
-                            <option value="model2">Model 2</option>
-                            <option value="model3">Model 3</option>
+                            {% for model in model_list %}
+                                <option value="{{ model }}">{{ model }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                     <div class="mb-3">

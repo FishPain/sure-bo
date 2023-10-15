@@ -33,7 +33,7 @@ def root():
             print(f"Error during prediction: {e}")
             return render_template("home.html", pred_error_msg=e)
                 
-    return render_template("home.html", job_dict=job_dict, pred_bool=pred_bool, exp_list=exp_list, raw_text=raw_text)
+    return render_template("home.html", job_dict=job_dict, pred_bool=pred_bool, exp_list=exp_list, raw_text=raw_text, model_list=app_utils.get_model_list())
 
 
 # 404 Page
