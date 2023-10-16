@@ -162,3 +162,4 @@ cython_debug/
 # model stuff
 *.pkl
 .DS_Store
+.vscode
