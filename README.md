@@ -1,11 +1,14 @@
-# sure-bo
-As of December 2022, there’s a total of 6494 victims of online job scams which totaled to a sum of more than $117.4 million lost, [1] making it the second most popular scams in singapore. [2] Victims will normally receive unsolicited job offers via messaging apps, social media, etc. Very often, potential ‘employers’ will offer high pay with very little time commitment or effort. With the use of AI technologies, such as NLP, we will be able to identify such scams before Singaporeans fall for it.
+# Sure-Bo: A Data-Driven Web Application to Detecting Online Job Scams
+## Get started
+### Run using docker (Highly Recommended)
+Run `./docker-start.sh` in project root dir <br>
+Site will be available on http://127.0.0.1:8080
 
-# Get started
-Run using docker
-`sh ./docker-start.sh` <br>
+### Run locally
+> It is recommended to run this project using python 3.8x
 
-Run using python
-```pip install -r requirements.txt```<br>
-Debug mode: ```python app.py```<br>
-Prod mode: ```flask --app app run```<br>
+1. Download pretrained model [here](https://github.com/FishPain/sure-bo/releases/download/v0.1.0/{rf}.pkl) and save it under `src/models`<br>
+2. ```pip install -r requirements.txt```<br>
+3. Debug mode: ```python app.py```<br>
+4. Prod mode: ```flask --app app run```
+5. Site will be available on http://127.0.0.1:5001
