@@ -20,7 +20,7 @@ COPY . /app/
 ARG ASSET_NAME=rf.pkl
 ARG LOCAL_FILENAME=src/models/${ASSET_NAME}
 RUN curl -LJO https://github.com/FishPain/sure-bo/releases/download/v0.1.0/${ASSET_NAME}
-RUN mkdir /app/src/models
+RUN if [ ! -d /app/src/models ]; then mkdir -p /app/src/models; fi
 RUN mv ${ASSET_NAME} ${LOCAL_FILENAME} \
     && ls -lh ${LOCAL_FILENAME} \
     && echo "File downloaded successfully."
