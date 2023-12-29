@@ -1,4 +1,4 @@
-# Sure-Bo: A Data-Driven Web Application to Detecting Online Job Scams
+# [Sure-Bo: A Data-Driven Web Application to Detecting Online Job Scams](report.pdf)
 ## Get started
 ### Run using docker (Highly Recommended)
 Run `./docker-start.sh` in project root dir <br>
